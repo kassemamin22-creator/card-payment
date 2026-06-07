@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMIN PAYMENT - Secure Checkout</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="checkout-wrapper">
+
+        <main class="checkout-form-container">
+            <div class="brand-header">
+                <div class="brand-logo">⚡ AMIN PAYMENT</div>
+            </div>
+
+            <form id="global-checkout-form" novalidate>
+
+                <div class="form-section">
+                    <h3 class="section-title">Customer Information</h3>
+                    <div class="input-group">
+                        <label for="customer-name">Full Name</label>
+                        <input type="text" id="customer-name" required placeholder="Amin Kassem">
+                        <span class="error-msg" id="c-name-error"></span>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="customer-email">Email Address</label>
+                            <input type="email" id="customer-email" required placeholder="kassem.amin22@gmail.com">
+                            <span class="error-msg" id="c-email-error"></span>
+                        </div>
+                        <div class="input-group">
+                            <label for="customer-phone">Phone Number</label>
+                            <input type="tel" id="customer-phone" required placeholder="+961 70 386 491">
+                            <span class="error-msg" id="c-phone-error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Shipping Address</h3>
+                    <div class="input-group">
+                        <label for="shipping-address">Street Address</label>
+                        <input type="text" id="shipping-address" required placeholder="Airport Street">
+                        <span class="error-msg" id="c-address-error"></span>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="shipping-city">City</label>
+                            <input type="text" id="shipping-city" required placeholder="Beirut">
+                            <span class="error-msg" id="c-city-error"></span>
+                        </div>
+                        <div class="input-group">
+                            <label for="shipping-zip">ZIP Code</label>
+                            <input type="text" id="shipping-zip" required placeholder="10001">
+                            <span class="error-msg" id="c-zip-error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Payment Method</h3>
+
+                    <div class="payment-selector">
+                        <label class="selector-card active" onclick="switchMethod('card')">
+                            <input type="radio" name="payment-type" value="card" checked>
+                            <span>Credit Card</span>
+                        </label>
+                        <label class="selector-card" onclick="switchMethod('paypal')">
+                            <input type="radio" name="payment-type" value="paypal">
+                            <span>PayPal</span>
+                        </label>
+                        <label class="selector-card" onclick="switchMethod('apple')">
+                            <input type="radio" name="payment-type" value="apple">
+                            <span>Apple Pay</span>
+                        </label>
+                    </div>
+
+                    <div class="interactive-card-wrapper" id="card-preview-zone">
+                        <div class="premium-card">
+                            <div class="card-front">
+                                <div class="card-row">
+                                    <div class="card-chip"></div>
+                                    <div class="card-brand-icon" id="card-type-display">VISA</div>
+                                </div>
+                                <div class="card-number-display" id="mirror-card-num">4532 7182 9304 6511</div>
+                                <div class="card-row">
+                                    <div class="card-holder-zone">
+                                        <span>CARDHOLDER</span>
+                                        <div id="mirror-card-holder">AMIN KASSEM</div>
+                                    </div>
+                                    <div class="card-expiry-zone">
+                                        <span>EXPIRES</span>
+                                        <div id="mirror-card-expiry">MM/YY</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="credit-card-inputs" class="method-fields-container">
+                        <div class="input-group">
+                            <label for="card-name">Name on Card</label>
+                            <input type="text" id="card-name" placeholder="Amin Kassem">
+                            <span class="error-msg" id="card-name-error"></span>
+                        </div>
+                        <div class="input-group">
+                            <label for="card-number">Card Number</label>
+                            <input type="text" id="card-number" placeholder="4532 7182 9304 6511" maxlength="19">
+                            <span class="error-msg" id="card-number-error"></span>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="card-expiry">Expiration Date</label>
+                                <input type="text" id="card-expiry" placeholder="12/28" maxlength="5">
+                                <span class="error-msg" id="card-expiry-error"></span>
+                            </div>
+                            <div class="input-group">
+                                <label for="card-cvv">CVC / CVV</label>
+                                <input type="password" id="card-cvv" placeholder="123" maxlength="3">
+                                <span class="error-msg" id="card-cvv-error"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="paypal-inputs" class="method-fields-container hidden">
+                        <div class="input-group">
+                            <label for="paypal-email">PayPal Email Address</label>
+                            <input type="email" id="paypal-email" placeholder="kassem.amin22@paypal.com">
+                            <span class="error-msg" id="paypal-email-error"></span>
+                        </div>
+                        <div class="input-group">
+                            <label for="paypal-password">PayPal Password</label>
+                            <input type="password" id="paypal-password" placeholder="••••••••••••">
+                            <span class="error-msg" id="paypal-password-error"></span>
+                        </div>
+                    </div>
+
+                    <div id="apple-inputs" class="method-fields-container hidden">
+                        <div class="input-group">
+                            <label for="apple-id">Apple ID / iCloud Account</label>
+                            <input type="email" id="apple-id" placeholder="amin.kassem@icloud.com">
+                            <span class="error-msg" id="apple-id-error"></span>
+                        </div>
+                        <div class="input-group">
+                            <label for="apple-phone">Linked Device Phone Number</label>
+                            <input type="tel" id="apple-phone" placeholder="+961 70 386 491">
+                            <span class="error-msg" id="apple-phone-error"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="pay-button" id="pay-button">
+                    <span id="pay-button-text">Complete Purchase — $558.00</span>
+                    <div class="loading-spinner hidden" id="spinner"></div>
+                </button>
+            </form>
+
+            <div id="result-overlay" class="result-overlay hidden">
+                <div class="result-message">
+                    <div id="result-icon">✨</div>
+                    <h2 id="result-title">Payment Successful!</h2>
+                    <p id="result-desc">Thank you for your purchase. Your transaction was processed securely, and a
+                        digital receipt has been sent to your email inbox.</p>
+                    <button type="button" class="success-done-btn" onclick="dismissOverlay()">Continue Shopping</button>
+                </div>
+            </div>
+        </main>
+
+        <aside class="checkout-cart-sidebar">
+            <div class="cart-sticky-content">
+                <h3 class="cart-title">Your Order</h3>
+
+                <div class="cart-items-list">
+                    <div class="cart-product-item">
+                        <div class="product-image-placeholder">💻</div>
+                        <div class="product-details">
+                            <div class="product-meta">
+                                <span class="product-title">Nexus Pro Display 32"</span>
+                                <span class="product-qty">Qty 1</span>
+                            </div>
+                            <span class="product-price">$499.00</span>
+                        </div>
+                    </div>
+
+                    <div class="cart-product-item">
+                        <div class="product-image-placeholder">🔌</div>
+                        <div class="product-details">
+                            <div class="product-meta">
+                                <span class="product-title">Thunderbolt 4 Pro Cable</span>
+                                <span class="product-qty">Qty 1</span>
+                            </div>
+                            <span class="product-price">$39.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pricing-ledger">
+                    <div class="ledger-row">
+                        <span>Subtotal</span>
+                        <span>$538.00</span>
+                    </div>
+                    <div class="ledger-row">
+                        <span>Secure Shipping</span>
+                        <span class="free-text">FREE</span>
+                    </div>
+                    <div class="ledger-row">
+                        <span>Estimated VAT</span>
+                        <span>$20.00</span>
+                    </div>
+                    <div class="ledger-divider"></div>
+                    <div class="ledger-row total-row">
+                        <span>Total Due</span>
+                        <span>$558.00</span>
+                    </div>
+                </div>
+
+                <div class="guarantee-box">
+                    <span class="badge-icon">🛡️</span>
+                    <p>Guaranteed safe checkout. Authorized credentials stay protected through encrypted modern
+                        protocols.</p>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
