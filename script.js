@@ -1,6 +1,11 @@
 function switchMethod(method) {
     document.querySelectorAll('.payment-selector .selector-card').forEach(card => card.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    if (window.event && window.event.currentTarget) {
+        window.event.currentTarget.classList.add('active');
+    } else if (window.event && window.event.target) {
+        const card = window.event.target.closest('.selector-card');
+        if (card) card.classList.add('active');
+    }
 
     document.getElementById('card-preview-zone').classList.add('hidden');
     document.getElementById('credit-card-inputs').classList.add('hidden');
@@ -48,11 +53,16 @@ document.getElementById('card-expiry').addEventListener('input', function (e) {
 
 function runGlobalValidation() {
     let passed = true;
-    const paymentMethod = document.querySelector('.payment-selector .selector-card.active input').value;
+
+    const activeSelector = document.querySelector('.payment-selector .selector-card.active input[type="radio"]');
+    const paymentMethod = activeSelector ? activeSelector.value : 'card';
 
     const baseInputs = document.querySelectorAll('#global-checkout-form input[required]');
     baseInputs.forEach(input => {
-        const errorField = document.getElementById(`c-${input.id.split('-')[1]}-error`);
+        const idParts = input.id.split('-');
+        const idPart = idParts[1] ? idParts[1] : idParts[0];
+        const errorField = document.getElementById(`c-${idPart}-error`);
+
         if (!input.value.trim()) {
             input.classList.add('invalid');
             if (errorField) errorField.textContent = "Required field.";
@@ -121,30 +131,44 @@ function runGlobalValidation() {
 
 document.getElementById('global-checkout-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    if (!runGlobalValidation()) return;
+
+    if (!runGlobalValidation()) {
+        return;
+    }
 
     const btn = document.getElementById('pay-button');
     const txt = document.getElementById('pay-button-text');
     const spinner = document.getElementById('spinner');
 
-    btn.disabled = true;
-    txt.classList.add('hidden');
-    spinner.classList.remove('hidden');
+    if (btn) btn.disabled = true;
+    if (txt) txt.classList.add('hidden');
+    if (spinner) spinner.classList.remove('hidden');
 
     setTimeout(() => {
-        btn.disabled = false;
-        txt.classList.remove('hidden');
-        spinner.classList.add('hidden');
+        if (btn) btn.disabled = false;
+        if (txt) txt.classList.remove('hidden');
+        if (spinner) spinner.classList.add('hidden');
 
-        document.getElementById('result-overlay').classList.remove('hidden');
+        const overlay = document.getElementById('result-overlay');
+        if (overlay) overlay.classList.remove('hidden');
     }, 2500);
 });
 
 function dismissOverlay() {
-    document.getElementById('result-overlay').classList.add('hidden');
+    const overlay = document.getElementById('result-overlay');
+    if (overlay) overlay.classList.add('hidden');
+
     document.getElementById('global-checkout-form').reset();
     document.getElementById('mirror-card-holder').textContent = "AMIN KASSEM";
     document.getElementById('mirror-card-num').textContent = "4532 7182 9304 6511";
     document.getElementById('mirror-card-expiry').textContent = "MM/YY";
-    switchMethod('card');
+
+    document.getElementById('card-preview-zone').classList.remove('hidden');
+    document.getElementById('credit-card-inputs').classList.remove('hidden');
+
+    const cardSelector = document.querySelector('.payment-selector .selector-card');
+    if (cardSelector) {
+        document.querySelectorAll('.payment-selector .selector-card').forEach(card => card.classList.remove('active'));
+        cardSelector.classList.add('active');
+    }
 }
